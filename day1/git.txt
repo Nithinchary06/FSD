@@ -1,0 +1,4 @@
+git init -- create a new repo
+git status -- check the changes in our work
+git add -- moves to staging area where indexing happens
+git commit - save your work

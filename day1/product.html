@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProdFlow | Modern Product Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
+    <main class="hero-container">
+      <span class="badge">Platform Version 2.0</span>
+      <h1>The Command Center For <span>Product Strategy</span></h1>
+
+      <p>
+        Consolidate your feedback pipelines, prioritize features via objective
+        scoring metrics, and seamlessly ship dynamic roadmap timelines your
+        development team can actually align with.
+      </p>
+
+      <button class="btn-interactive" id="exploreBtn">
+        Initialize Environment
+      </button>
+    </main>
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-box">
+        <h3>Initializing Sandbox Workspace...</h3>
+        <p style="font-size: 1rem; margin-bottom: 1rem">
+          Your local environment infrastructure has been dynamically
+          provisioned. Your mock metrics pipeline is now live:
+        </p>
+        <div class="feature-preview">
+          <code>
+            > Status: Active <br />
+            > Database Sync: 100% <br />
+            > Active Roadmaps: 3 <br />
+            > Tracked Epics: Ready
+          </code>
+        </div>
+        <button class="btn-close" id="closeBtn">Return to Terminal</button>
+      </div>
+    </div>
+
+    <script>
+      const exploreBtn = document.getElementById("exploreBtn")
+      const modalOverlay = document.getElementById("modalOverlay")
+      const closeBtn = document.getElementById("closeBtn")
+
+      // Open Modal Interaction
+      exploreBtn.addEventListener("click", () => {
+        modalOverlay.classList.add("active")
+      })
+
+      closeBtn.addEventListener("click", () => {
+        modalOverlay.classList.remove("active")
+      })
+
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) {
+          modalOverlay.classList.remove("active")
+        }
+      })
+    </script>
+  </body>
+</html>
