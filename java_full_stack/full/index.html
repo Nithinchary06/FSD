@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AMCAT Prep Portal | CSE, AIML & Java</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --background: #f8fafc;
+        --card-bg: #ffffff;
+        --text-dark: #2d3748;
+        --text-light: #718096;
+        --success: #27ae60;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text-dark);
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: var(--primary);
+        color: white;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      /* Dashboard Styles */
+      #dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .test-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-top: 4px solid var(--secondary);
+        transition: transform 0.2s;
+      }
+
+      .test-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .test-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+      }
+
+      .test-meta {
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        background: #edf2f7;
+        padding: 0.5rem;
+        border-radius: 4px;
+      }
+
+      .btn {
+        background-color: var(--secondary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+        transition: background 0.2s;
+      }
+
+      .btn:hover {
+        background-color: #2980b9;
+      }
+
+      /* Test Interface Styles */
+      #test-interface,
+      #results-interface {
+        display: none;
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .test-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #edf2f7;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .timer {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent);
+        background: #fff5f5;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: 1px solid #fed7d7;
+      }
+
+      .question-block {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f7fafc;
+        border-radius: 8px;
+        border-left: 4px solid var(--secondary);
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .options-list {
+        list-style: none;
+      }
+
+      .option-item {
+        margin-bottom: 0.5rem;
+      }
+
+      .option-label {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .option-label:hover {
+        background: #edf2f7;
+      }
+
+      .option-label input {
+        margin-right: 10px;
+      }
+
+      /* Results Styles */
+      .result-summary {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: #f0fff4;
+        border: 1px solid #c6f6d5;
+        border-radius: 8px;
+      }
+
+      .score {
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--success);
+      }
+
+      .solution-block {
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+      }
+
+      .correct-answer {
+        color: var(--success);
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+
+      .explanation {
+        margin-top: 0.5rem;
+        color: var(--text-light);
+        font-size: 0.95rem;
+        background: #edf2f7;
+        padding: 1rem;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AMCAT Preparation Portal</h1>
+      <p>CSE, AI/ML & Java Placement Readiness</p>
+    </header>
+
+    <div class="container">
+      <!-- Dashboard View -->
+      <div id="dashboard">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Test Interface View -->
+      <div id="test-interface">
+        <div class="test-header">
+          <h2 id="current-test-title">Test Name</h2>
+          <div class="timer" id="timer">00:00</div>
+        </div>
+        <div id="questions-container">
+          <!-- Questions injected here -->
+        </div>
+        <button
+          class="btn"
+          style="background-color: var(--success); margin-top: 1rem"
+          onclick="submitTest()"
+        >
+          Submit Test
+        </button>
+      </div>
+
+      <!-- Results Interface View -->
+      <div id="results-interface">
+        <div class="result-summary">
+          <h2>Test Completed</h2>
+          <div class="score" id="final-score">0 / 0</div>
+          <p>Review your solutions below.</p>
+          <button
+            class="btn"
+            style="width: auto; margin-top: 1rem"
+            onclick="returnToDashboard()"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+        <div id="solutions-container">
+          <!-- Solutions injected here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Utility to generate placeholder questions to meet strict PDF syllabus counts
+      function generateQuestions(moduleName, count, syllabusTopics) {
+        let questions = []
+        for (let i = 1; i <= count; i++) {
+          let topic = syllabusTopics[i % syllabusTopics.length]
+          questions.push({
+            qText: `Sample Question ${i}: Which of the following best describes a concept in ${topic}?`,
+            options: [
+              `Concept A related to ${topic}`,
+              `Concept B related to ${topic}`,
+              `Concept C related to ${topic}`,
+              `Concept D related to ${topic}`,
+            ],
+            correctIndex: i % 4,
+            explanation: `The correct answer is Option ${(i % 4) + 1} because it strictly aligns with the principles of ${topic} as per the AMCAT syllabus.`,
+          })
+        }
+        return questions
+      }
+
+      // Test Data Configuration based on AMCAT PDF Specifications
+      const testDatabase = [
+        {
+          id: 1,
+          title: "English Comprehension",
+          questionsCount: 18,
+          duration: 16,
+          description:
+            "Evaluates vocabulary, grammar, and literal comprehension.",
+          syllabus: [
+            "Synonyms",
+            "Antonyms",
+            "Subject-Verb Agreement",
+            "Tenses",
+            "Prepositions",
+          ],
+          questions: generateQuestions("English", 18, [
+            "Synonyms",
+            "Antonyms",
+            "Subject-Verb Agreement",
+            "Tenses",
+            "Prepositions",
+          ]),
+        },
+        {
+          id: 2,
+          title: "Logical Reasoning",
+          questionsCount: 14,
+          duration: 16,
+          description:
+            "Assesses capacity to interpret things objectively and logical patterns.",
+          syllabus: [
+            "Deductive Reasoning",
+            "Directional sense",
+            "Puzzles",
+            "Coding pattern",
+            "Data sufficiency",
+          ],
+          questions: generateQuestions("Logical Reasoning", 14, [
+            "Deductive Reasoning",
+            "Directional sense",
+            "Puzzles",
+            "Coding pattern",
+            "Data sufficiency",
+          ]),
+        },
+        {
+          id: 3,
+          title: "Quantitative Ability (Engineering)",
+          questionsCount: 16,
+          duration: 18,
+          description:
+            "Evaluates numerical ability and engineering mathematics.",
+          syllabus: [
+            "Divisibility",
+            "HCF and LCM",
+            "Profit and Loss",
+            "Logarithms",
+            "Probability",
+          ],
+          questions: generateQuestions("Quantitative Ability", 16, [
+            "Divisibility",
+            "HCF and LCM",
+            "Profit and Loss",
+            "Logarithms",
+            "Probability",
+          ]),
+        },
+        {
+          id: 4,
+          title: "Computer Programming",
+          questionsCount: 25,
+          duration: 35,
+          description:
+            "Evaluates basic programming, Data Structures, and OOPs concepts.",
+          syllabus: [
+            "Data Types",
+            "Iteration",
+            "Arrays/Linked Lists",
+            "OOPS",
+            "Searching and Sorting",
+          ],
+          questions: [
+            {
+              qText:
+                "In Java, which concept restricts direct access to some of an object's components?",
+              options: [
+                "Polymorphism",
+                "Encapsulation",
+                "Inheritance",
+                "Abstraction",
+              ],
+              correctIndex: 1,
+              explanation:
+                "Encapsulation is the mechanism of hiding of data implementation by restricting access to public methods.",
+            },
+            // Pad the rest to exactly 25 questions
+            ...generateQuestions("Computer Programming", 24, [
+              "Data Types",
+              "Iteration",
+              "Arrays/Linked Lists",
+              "OOPS",
+              "Searching and Sorting",
+            ]),
+          ],
+        },
+        {
+          id: 5,
+          title: "Automata Fix (Debugging)",
+          questionsCount: 7,
+          duration: 20,
+          description:
+            "Fix logical/syntax errors or complete the code by reusing functions.",
+          syllabus: ["Logical Errors", "Compilation Errors", "Code reuse"],
+          questions: generateQuestions("Automata Fix", 7, [
+            "Logical Errors",
+            "Compilation Errors",
+            "Code reuse",
+          ]),
+        },
+        {
+          id: 6,
+          title: "Automata (Coding)",
+          questionsCount: 2,
+          duration: 70,
+          description:
+            "Advanced data structures, sorting, and algorithmic design.",
+          syllabus: [
+            "Array Rotations",
+            "Linked list manipulation",
+            "String Matching",
+            "Divide and Conquer",
+          ],
+          questions: generateQuestions("Automata Coding", 2, [
+            "Array Rotations",
+            "Linked list manipulation",
+            "String Matching",
+            "Divide and Conquer",
+          ]),
+        },
+        {
+          id: 7,
+          title: "Quantitative Ability (General)",
+          questionsCount: 16,
+          duration: 16,
+          description: "Evaluates numerical ability for general graduates.",
+          syllabus: [
+            "Fractions",
+            "Simple/Compound Interest",
+            "Time, Speed and Distance",
+            "Permutation and Combinations",
+          ],
+          questions: generateQuestions("Quant General", 16, [
+            "Fractions",
+            "Simple/Compound Interest",
+            "Time, Speed and Distance",
+            "Permutation and Combinations",
+          ]),
+        },
+        {
+          id: 8,
+          title: "Electronics and Semi-conductors",
+          questionsCount: 25,
+          duration: 35,
+          description:
+            "Relevant for Hardware and Embedded Systems integration.",
+          syllabus: [
+            "Semiconductors",
+            "Analog Electronics",
+            "Digital Electronics",
+            "VLSI Basics",
+          ],
+          questions: generateQuestions("Electronics", 25, [
+            "Semiconductors",
+            "Analog Electronics",
+            "Digital Electronics",
+            "VLSI Basics",
+          ]),
+        },
+      ]
+
+      let currentTest = null
+      let timerInterval = null
+      let userAnswers = {}
+
+      // Initialize Dashboard
+      function initDashboard() {
+        const dashboard = document.getElementById("dashboard")
+        dashboard.innerHTML = ""
+
+        testDatabase.forEach((test) => {
+          const card = document.createElement("div")
+          card.className = "test-card"
+          card.innerHTML = `
+                    <div class="test-title">${test.title}</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: #4a5568;">${test.description}</p>
+                    <div class="test-meta">
+                        <span>📝 ${test.questionsCount} Questions</span>
+                        <span>⏱️ ${test.duration} Mins</span>
+                    </div>
+                    <button class="btn" onclick="startTest(${test.id})">Start Test</button>
+                `
+          dashboard.appendChild(card)
+        })
+      }
+
+      // Start Test Function
+      function startTest(testId) {
+        currentTest = testDatabase.find((t) => t.id === testId)
+        userAnswers = {} // Reset answers
+
+        document.getElementById("dashboard").style.display = "none"
+        document.getElementById("test-interface").style.display = "block"
+        document.getElementById("current-test-title").innerText =
+          currentTest.title
+
+        renderQuestions()
+        startTimer(currentTest.duration * 60)
+        window.scrollTo(0, 0)
+      }
+
+      // Render Questions
+      function renderQuestions() {
+        const container = document.getElementById("questions-container")
+        container.innerHTML = ""
+
+        currentTest.questions.forEach((q, index) => {
+          const qBlock = document.createElement("div")
+          qBlock.className = "question-block"
+
+          let optionsHtml = q.options
+            .map(
+              (opt, optIdx) => `
+                    <li class="option-item">
+                        <label class="option-label">
+                            <input type="radio" name="q${index}" value="${optIdx}" onchange="recordAnswer(${index}, ${optIdx})">
+                            ${opt}
+                        </label>
+                    </li>
+                `,
+            )
+            .join("")
+
+          qBlock.innerHTML = `
+                    <div class="question-text">${index + 1}. ${q.qText}</div>
+                    <ul class="options-list">
+                        ${optionsHtml}
+                    </ul>
+                `
+          container.appendChild(qBlock)
+        })
+      }
+
+      // Record User Answer
+      function recordAnswer(qIndex, optIndex) {
+        userAnswers[qIndex] = optIndex
+      }
+
+      // Timer Logic
+      function startTimer(seconds) {
+        const timerDisplay = document.getElementById("timer")
+
+        timerInterval = setInterval(() => {
+          const min = Math.floor(seconds / 60)
+          const sec = seconds % 60
+          timerDisplay.innerText = `${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`
+
+          if (seconds <= 0) {
+            clearInterval(timerInterval)
+            alert("Time is up! Auto-submitting your test.")
+            submitTest()
+          }
+          seconds--
+        }, 1000)
+      }
+
+      // Submit Test & Calculate Score
+      function submitTest() {
+        clearInterval(timerInterval)
+        let score = 0
+
+        currentTest.questions.forEach((q, index) => {
+          if (userAnswers[index] === q.correctIndex) {
+            score++
+          }
+        })
+
+        document.getElementById("test-interface").style.display = "none"
+        document.getElementById("results-interface").style.display = "block"
+
+        document.getElementById("final-score").innerText =
+          `${score} / ${currentTest.questionsCount}`
+        renderSolutions()
+        window.scrollTo(0, 0)
+      }
+
+      // Render Solutions
+      function renderSolutions() {
+        const container = document.getElementById("solutions-container")
+        container.innerHTML = ""
+
+        currentTest.questions.forEach((q, index) => {
+          const solBlock = document.createElement("div")
+          solBlock.className = "solution-block"
+
+          const userAnswerTxt =
+            userAnswers[index] !== undefined
+              ? q.options[userAnswers[index]]
+              : "Not Attempted"
+          const isCorrect = userAnswers[index] === q.correctIndex
+
+          solBlock.innerHTML = `
+                    <div class="question-text">${index + 1}. ${q.qText}</div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <strong>Your Answer:</strong> <span style="color: ${isCorrect ? "var(--success)" : "var(--accent)"}">${userAnswerTxt}</span>
+                    </div>
+                    <div class="correct-answer">Correct Answer: ${q.options[q.correctIndex]}</div>
+                    <div class="explanation"><strong>Explanation:</strong> ${q.explanation}</div>
+                `
+          container.appendChild(solBlock)
+        })
+      }
+
+      // Return to Dashboard
+      function returnToDashboard() {
+        document.getElementById("results-interface").style.display = "none"
+        document.getElementById("dashboard").style.display = "grid"
+        window.scrollTo(0, 0)
+      }
+
+      // Boot
+      window.onload = initDashboard
+    </script>
+  </body>
+</html>
